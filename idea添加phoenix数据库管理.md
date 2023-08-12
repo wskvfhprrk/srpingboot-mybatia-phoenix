@@ -5,4 +5,5 @@
 
 ### 2、【Database】中添加phoenix驱动
 #### 1）添加驱动
+![添加驱动1](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_1.png)
 ![添加驱动2](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img.png)
