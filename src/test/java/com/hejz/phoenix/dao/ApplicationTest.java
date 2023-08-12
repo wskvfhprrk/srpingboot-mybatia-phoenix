@@ -2,6 +2,9 @@ package com.hejz.phoenix.dao;
 
 import java.sql.*;
 
+/**
+ * 测试通过jdbc查询phoneix。
+ */
 public class ApplicationTest {
 
     public static void main(String[] args) {

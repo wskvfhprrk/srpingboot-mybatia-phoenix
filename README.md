@@ -8,3 +8,8 @@ springboot+mybatis框架整合phoenix框架
     * springboot3.0.0
     * mybatis3.0.2
     * phoenix5.1.3
+
+#### 测试方法
+    * ApplicationTest-测试通过jdbc查询phoneix
+    * UserDaoTest-测试mbyatix管理phoneix
+    * *ToPhoenixSync-mysql数据表jdbc同步到phoneix中
