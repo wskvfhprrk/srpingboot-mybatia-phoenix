@@ -13,3 +13,6 @@ springboot+mybatis框架整合phoenix框架
     * ApplicationTest-测试通过jdbc查询phoneix
     * UserDaoTest-测试mbyatix管理phoneix
     * *ToPhoenixSync-mysql数据表jdbc同步到phoneix中
+
+#### idea添加phoenix数据库管理
+[idea添加phoenix数据库管理](idea添加phoenix数据库管理.md)
