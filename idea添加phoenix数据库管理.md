@@ -50,11 +50,11 @@ select * from "user";
 **注意事项**
 * 表名和字段名区分大小写，如果不用双引号都为大写字母，如图：
   
-  ![区分表名大小写](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_12.png)
+  ![区分表名大小写](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img.png)
   
-  ![区分表名大小写](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_13.png)
+  ![区分表名大小写](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_12.png)
   
 * 添加最没有`int`字段名，应改为`integer`;
 * upsert时values里面值使用单引号，否则会报错。
   
-  ![upsert时values里面值使用单引号](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_14.png)
+  ![upsert时values里面值使用单引号](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_13.png)
