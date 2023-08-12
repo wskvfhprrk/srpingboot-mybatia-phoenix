@@ -32,17 +32,6 @@ public class SummaryDataSumPerSecondToPhoenixSync {
                 upsertStmt = phoenixConnection.prepareStatement(upsertStatement);
                 //遍历插入数据
                 for (Map map : mysqlDataList) {
-                    //energy_consumption	varchar
-                    //energy_consumption_unit	varchar
-                    //cooling_capacity	varchar
-                    //cooling_capacity_unit	varchar
-                    //second_consumption	varchar
-                    //second_cooling_capacity	varchar
-                    //second_eer	varchar
-                    //average_load_rate	varchar
-                    //consumptions	varchar
-                    //running_current_curve	varchar
-                    //water_temperature_curve	varchar
                     upsertStmt.setLong(1, Long.parseLong(String.valueOf(map.get("id"))));
                     Date create_time =null;
                     //表中解析时间有误
@@ -109,16 +98,4 @@ public class SummaryDataSumPerSecondToPhoenixSync {
 
         return dataList;
     }
-
-//    public static void main(String[] args) {
-//        String mysqlJdbcUrl = "jdbc:mysql://mysql_host:3306/mysql_database";
-//        String mysqlUser = "mysql_user";
-//        String mysqlPassword = "mysql_password";
-//
-//        MySQLDataFetcher dataFetcher = new MySQLDataFetcher();
-//        List<Map<String, Object>> mysqlDataList = dataFetcher.fetchMySQLData(mysqlJdbcUrl, mysqlUser, mysqlPassword);
-//
-//        // Now you have the MySQL data in the mysqlDataList as a list of maps
-//        // You can proceed to insert it into Phoenix
-//    }
 }

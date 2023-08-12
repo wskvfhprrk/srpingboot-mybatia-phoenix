@@ -32,11 +32,6 @@ public class SensorDataToPhoenixSync {
                 upsertStmt = phoenixConnection.prepareStatement(upsertStatement);
                 //遍历插入数据
                 for (Map map : mysqlDataList) {
-                    //4 sensor_id	int
-                    //5 sensor_name	varchar
-                    //6 collected_data	double
-                    //7 cold_meter_id	int
-                    //8 cold_meter_real_address	varchar
                     upsertStmt.setLong(1, Long.parseLong(String.valueOf(map.get("id"))));
                     Date create_time =null;
                     //表中解析时间有误
@@ -99,15 +94,4 @@ public class SensorDataToPhoenixSync {
         return dataList;
     }
 
-//    public static void main(String[] args) {
-//        String mysqlJdbcUrl = "jdbc:mysql://mysql_host:3306/mysql_database";
-//        String mysqlUser = "mysql_user";
-//        String mysqlPassword = "mysql_password";
-//
-//        MySQLDataFetcher dataFetcher = new MySQLDataFetcher();
-//        List<Map<String, Object>> mysqlDataList = dataFetcher.fetchMySQLData(mysqlJdbcUrl, mysqlUser, mysqlPassword);
-//
-//        // Now you have the MySQL data in the mysqlDataList as a list of maps
-//        // You can proceed to insert it into Phoenix
-//    }
 }

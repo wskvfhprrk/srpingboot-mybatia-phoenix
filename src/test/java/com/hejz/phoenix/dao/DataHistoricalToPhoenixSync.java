@@ -72,7 +72,6 @@ public class DataHistoricalToPhoenixSync {
         try {
             // Manually load the MySQL driver class
             Class.forName("com.mysql.cj.jdbc.Driver");
-
             try (Connection connection = DriverManager.getConnection(jdbcUrl, user, password)) {
                 try (PreparedStatement statement = connection.prepareStatement(sql)) {
                     try (ResultSet resultSet = statement.executeQuery()) {
@@ -97,16 +96,4 @@ public class DataHistoricalToPhoenixSync {
 
         return dataList;
     }
-
-//    public static void main(String[] args) {
-//        String mysqlJdbcUrl = "jdbc:mysql://mysql_host:3306/mysql_database";
-//        String mysqlUser = "mysql_user";
-//        String mysqlPassword = "mysql_password";
-//
-//        MySQLDataFetcher dataFetcher = new MySQLDataFetcher();
-//        List<Map<String, Object>> mysqlDataList = dataFetcher.fetchMySQLData(mysqlJdbcUrl, mysqlUser, mysqlPassword);
-//
-//        // Now you have the MySQL data in the mysqlDataList as a list of maps
-//        // You can proceed to insert it into Phoenix
-//    }
 }

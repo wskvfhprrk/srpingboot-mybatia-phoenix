@@ -36,7 +36,6 @@ public class DataDeviceOriginalToPhoenixSync {
                 String upsertStatement = "UPSERT INTO \"air\".\"data_device_original\" VALUES (?, ?, ?, ?)";
                 upsertStmt = phoenixConnection.prepareStatement(upsertStatement);
 
-//            Class.forName(PhoenixDriver.class.getName());
                 for (Map map : mysqlDataList) {
                     upsertStmt.setLong(1, (Long) map.get("id"));
                     upsertStmt.setString(2, String.valueOf(map.get("topic")));
