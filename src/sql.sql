@@ -2,11 +2,11 @@
 -- 同步原始数据表
 drop TABLE "air"."data_power";
 CREATE TABLE "air"."data_power" (
-    "id" bigbigint NOT NULL PRIMARY KEY,
+    "id" bigint NOT NULL PRIMARY KEY,
     "create_time" date,
-    "park_id" bigbigint ,
-    "type_id" bigbigint ,
-    "device_id" bigbigint ,
+    "park_id" bigint ,
+    "type_id" bigint ,
+    "device_id" bigint ,
     "device_name" varchar(255) ,
     "power" varchar(255)
 );
