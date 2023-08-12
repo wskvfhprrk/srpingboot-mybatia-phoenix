@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: org.apache.phoenix.jdbc.PhoenixDriver
+    url: jdbc:phoenix:hd37,hd38,hd39:2181
+#    initialSize: 10
+#    maxActive: 20
+#    minIdle: 1
+#    maximumPoolSize: 20
+#    autoCommit: true
+#    poolName: HikariPool_phoenix
+#    connectionTestQuery: SELECT 1
+
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.hejz.phoenix.entity
+
