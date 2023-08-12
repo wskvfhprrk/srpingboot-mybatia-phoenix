@@ -14,7 +14,7 @@
 
 ![添加数据链接2](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_5.png)
 
-** 严格按照以上步骤执行，有可能测试连接不成功的。请多试几次！ **
+**严格按照以上步骤执行，有可能测试连接不成功的。请多试几次！**
 
 #### 2）测试
 ```sql
