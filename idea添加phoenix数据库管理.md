@@ -13,8 +13,6 @@
 
 ![添加数据链接2](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_5.png)
 
-![添加数据链接2](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_6.png)
-
 ** 严格按照以上步骤执行，有可能测试连接不成功的。请多试几次！ **
 
 #### 2）测试
@@ -40,6 +38,7 @@ select * from "user";
 输出日志和结果
 
 ![添加数据链接2](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_8.png)
+
 ![添加数据链接2](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_11.png)
 在phoneix客户端下查看表
 
@@ -49,6 +48,7 @@ select * from "user";
 * 表名和字段名区分大小写，如果不用双引号都为大写字母，如图：
   
   ![区分表名大小写](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_12.png)
+  
   ![区分表名大小写](https://github.com/wskvfhprrk/srpingboot-mybatia-phoenix/blob/main/picture/img_13.png)
 * 添加最没有`int`字段名，应改为`integer`;
 * upsert时values里面值使用单引号，否则会报错。
