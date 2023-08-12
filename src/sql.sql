@@ -1,3 +1,17 @@
+-- user测试数据
+drop TABLE "user";
+CREATE TABLE "user"(
+                       "id" bigint NOT NULL PRIMARY KEY,
+                       "name" varchar ,
+                       "age" integer ,
+                       "sex" varchar ,
+                       "date" date
+);
+
+upsert into "user" values (1,'张三',18,'男','2023-08-12 00:00:00');
+upsert into "user" values (2,'李四',18,'男','2023-05-12 00:00:00');
+
+select * from "user";
 -- pheneix创建表——与mysql字段对应
 -- 同步原始数据表
 drop TABLE "air"."data_power";
