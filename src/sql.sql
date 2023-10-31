@@ -77,7 +77,7 @@ from "air"."data_power";
 where "device_id"=4 and "create_time" > TO_DATE('2023-08-01', 'yyyy-MM-dd');
 select *
 from "air"."data_power"
-where "device_id" = 4
+where "device_id" = 2
   and "create_time" > TO_TIMESTAMP('2023-08-01 12:34:56', 'yyyy-MM-dd HH:mm:ss');;
 select count(*)
 from "air"."data_power";
@@ -93,7 +93,7 @@ CREATE TABLE "air"."device_status"
     "park_id"     bigint
 );
 
-select *
+select "id",SUBSTR(to_char("create_time"),1,10)
 from "air"."device_status";
 select count(*)
 from "air"."device_status";
