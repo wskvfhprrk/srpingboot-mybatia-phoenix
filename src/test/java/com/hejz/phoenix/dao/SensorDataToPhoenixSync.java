@@ -25,6 +25,7 @@ public class SensorDataToPhoenixSync {
                 String sql = "SELECT * FROM sensor_data LIMIT 10000 OFFSET " + i * 10000;
                 List<Map<String, Object>> mysqlDataList = fetchMySQLData(mysqlUrl, mysqlUser, mysqlPassword, sql);
                 if (mysqlDataList.size() == 0) {
+                    System.out.println("i======="+i);
                     break;
                 }
                 // 插入进Phoenix表

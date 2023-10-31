@@ -15,52 +15,59 @@ import java.util.Map;
 public class DataDeviceOriginalToPhoenixSync {
     public static void main(String[] args) throws SQLException {
         LocalDateTime begin = LocalDateTime.now();
-        // MySQL connection details
+        // MySQL连接详情
         String mysqlUrl = "jdbc:mysql://172.30.14.26:3306/cloud@air";
         String mysqlUser = "bcpark@test";
         String mysqlPassword = "jgjIWEiurhkEREOjtwrh24g";
 
-        // Phoenix connection details
+        // Phoenix连接详情
         String phoenixJdbcUrl = "jdbc:phoenix:hd37,hd38,hd39:2181";
         Connection phoenixConnection = DriverManager.getConnection(phoenixJdbcUrl);
-        PreparedStatement upsertStmt =null;
+        PreparedStatement upsertStmt = null;
         try {
-            for (int i = 0; i < 50; i++) {
-                new Thread(()->{}).start();
+            upsertStmt = phoenixConnection.prepareStatement("UPSERT INTO \"air\".\"data_device_original\" VALUES (?, ?, ?, ?)");
+
+            for (int i = 0; i <= 200; i++) {
                 String sql = "SELECT * FROM data_device_original LIMIT 1000 OFFSET " + i * 1000;
                 List<Map<String, Object>> mysqlDataList = fetchMySQLData(mysqlUrl, mysqlUser, mysqlPassword, sql);
+                System.out.println("i=========" + i);
                 if (mysqlDataList.size() == 0) {
                     break;
                 }
-                // Insert data into Phoenix
-                String upsertStatement = "UPSERT INTO \"air\".\"data_device_original\" VALUES (?, ?, ?, ?)";
-                upsertStmt = phoenixConnection.prepareStatement(upsertStatement);
-
                 for (Map map : mysqlDataList) {
                     upsertStmt.setLong(1, (Long) map.get("id"));
                     upsertStmt.setString(2, String.valueOf(map.get("topic")));
-                    Date create_time =null;
-                    //表中解析时间有误
+                    Date create_time;
+
                     if (String.valueOf(map.get("create_time")).length() == 19) {
                         create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(String.valueOf(map.get("create_time")));
-                    }else {
-                        create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(String.valueOf(map.get("create_time")+":00"));
+                    } else {
+                        create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(map.get("create_time") + ":00");
                     }
+
                     upsertStmt.setDate(3, new java.sql.Date(create_time.getTime()));
-                    upsertStmt.setString(4, String.valueOf(map.get("content")));
+                    upsertStmt.setLong(4, Long.valueOf(map.get("content").toString()));
                     upsertStmt.executeUpdate();
                 }
                 phoenixConnection.commit();
             }
-            upsertStmt.close();
-            LocalDateTime end = LocalDateTime.now();
-            Duration between = Duration.between(begin, end);
-            System.out.println("====数据同步完毕用时间： " + between.getSeconds() + " 秒==");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            if (upsertStmt != null) {
+//                try {
+//                    Thread.sleep(500000L);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+                upsertStmt.close();
+            }
             phoenixConnection.close();
         }
+
+        LocalDateTime end = LocalDateTime.now();
+        Duration between = Duration.between(begin, end);
+        System.out.println("====数据同步完毕用时间： " + between.getSeconds() + " 秒==");
     }
 
     public static List<Map<String, Object>> fetchMySQLData(String jdbcUrl, String user, String password, String sql) {

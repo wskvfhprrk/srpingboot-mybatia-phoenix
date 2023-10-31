@@ -33,12 +33,12 @@ public class DeviceStatusToPhoenixSync {
                 //遍历插入数据
                 for (Map map : mysqlDataList) {
                     upsertStmt.setLong(1, (Long) map.get("id"));
-                    Date create_time =null;
+                    Date create_time = null;
                     //表中解析时间有误
                     if (String.valueOf(map.get("create_time")).length() == 19) {
                         create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(String.valueOf(map.get("create_time")));
-                    }else {
-                        create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(String.valueOf(map.get("create_time")+":00"));
+                    } else {
+                        create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(String.valueOf(map.get("create_time") + ":00"));
                     }
                     upsertStmt.setDate(2, new java.sql.Date(create_time.getTime()));
                     upsertStmt.setInt(3, Integer.parseInt(String.valueOf(map.get("device_id"))));
@@ -57,7 +57,7 @@ public class DeviceStatusToPhoenixSync {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            phoenixConnection.close();
+            phoenixConnection.close() ;
         }
     }
 

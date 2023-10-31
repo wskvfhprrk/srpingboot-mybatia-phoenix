@@ -24,8 +24,8 @@ public class EnergyConsumptionToPhoenixSync {
                 //从mysql中查询出来数据
                 String sql = "SELECT * FROM energy_consumption LIMIT 10000 OFFSET " + i * 10000;
                 List<Map<String, Object>> mysqlDataList = fetchMySQLData(mysqlUrl, mysqlUser, mysqlPassword, sql);
-
                 if (mysqlDataList.size() == 0) {
+                    System.out.println("i====="+i);
                     break;
                 }
                 // 插入进Phoenix表

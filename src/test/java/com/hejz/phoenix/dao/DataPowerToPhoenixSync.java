@@ -22,9 +22,10 @@ public class DataPowerToPhoenixSync {
         try {
             for (int i = 0; i < 500000; i++) {
                 //从mysql中查询出来数据
-                String sql = "SELECT * FROM data_power LIMIT 1000 OFFSET " + i * 1000;
+                String sql = "SELECT * FROM data_power LIMIT 10000 OFFSET " + i * 10000;
                 List<Map<String, Object>> mysqlDataList = fetchMySQLData(mysqlUrl, mysqlUser, mysqlPassword, sql);
                 if (mysqlDataList.size() == 0) {
+                    System.out.println("i======"+i);
                     break;
                 }
                 // 插入进Phoenix表
@@ -38,14 +39,14 @@ public class DataPowerToPhoenixSync {
                     if (String.valueOf(map.get("create_time")).length() == 19) {
                         create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(String.valueOf(map.get("create_time")));
                     }else {
-                        create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(String.valueOf(map.get("create_time")+":00"));
+                        create_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(map.get("create_time") + ":00");
                     }
                     upsertStmt.setDate(2, new java.sql.Date(create_time.getTime()));
                     upsertStmt.setInt(3, Integer.parseInt(String.valueOf(map.get("park_id"))));
                     upsertStmt.setInt(4, Integer.parseInt(String.valueOf(map.get("type_id"))));
                     upsertStmt.setInt(5, Integer.parseInt(String.valueOf(map.get("device_id"))));
                     upsertStmt.setString(6, String.valueOf(map.get("device_name")));
-                    upsertStmt.setString(7, String.valueOf(map.get("power")));
+                    upsertStmt.setDouble(7, Double.valueOf(map.get("power").toString()));
                     upsertStmt.executeUpdate();
                 }
 
