@@ -33,6 +33,10 @@ ssh root@hd39 "rpm -qa | grep zookeeper"
 echo =========== 删除soft文件夹重新建==================================
 rm -rf $base_path/
 mkdir -p  $base_path/
+echo =========== 删除临时文件==================================
+rm -rf /tmp/*
+ssh root@hd38 "rm -rf /tmp/*"
+ssh root@hd39 "rm -rf /tmp/*"
 echo =========== jdk安装新的jkd==================================
 cp -r jdk1.8.0_381/ $base_path/
 echo =========== hadoop安装新的hadoop============================
