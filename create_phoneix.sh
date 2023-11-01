@@ -22,6 +22,14 @@ rpm -qa | grep java
 rpm -qa | grep hadoop
 rpm -qa | grep hbase
 rpm -qa | grep zookeeper
+ssh root@hd38 "rpm -qa | grep java"
+ssh root@hd38 "rpm -qa | grep hadoop"
+ssh root@hd38 "rpm -qa | grep hbase"
+ssh root@hd38 "rpm -qa | grep zookeeper"
+ssh root@hd39 "rpm -qa | grep java"
+ssh root@hd39 "rpm -qa | grep hadoop"
+ssh root@hd39 "rpm -qa | grep hbase"
+ssh root@hd39 "rpm -qa | grep zookeeper"
 echo =========== 删除soft文件夹重新建==================================
 rm -rf $base_path/
 mkdir -p  $base_path/
@@ -92,6 +100,8 @@ tar -xzf phoenix-hbase-2.4.0-5.1.3-bin.tar.gz -C $base_path/
 mv $base_path/phoenix-hbase-2.4.0-5.1.3-bin/ $base_path/phoenix
 cp $base_path/phoenix/phoenix-server-hbase-2.4.0.jar $base_path/hbase/lib/
 echo =========== 分发文件============================
+./xsync.sh /etc/profile.d/my_dev.sh
+./xsync.sh $base_path/jdk1.8.0_381/
 ./xsync.sh $base_path/hadoop-3.1.3/
 ./xsync.sh $base_path/zk/
 ./xsync.sh $base_path/hbase/
@@ -109,9 +119,12 @@ read input
 if [ "$input" = "y" ]; then
     # 在这里写下面的程序
     echo "执行格式化hdfs程序………………………………………………"
-    rm -rf /opt/hadoopData
-    ssh root@hd38 "rm -rf /opt/hadoopData"
-    ssh root@hd39 "rm -rf /opt/hadoopData"
+    rm -rf /opt/hadoop
+    ssh root@hd38 "rm -rf /opt/hadoop"
+    ssh root@hd39 "rm -rf /opt/hadoop"
+    rm -rf /opt/hbase
+    ssh root@hd38 "rm -rf /opt/hbase"
+    ssh root@hd39 "rm -rf /opt/hbase"
     eval "$format_command"
 else
     echo "取消执行"
