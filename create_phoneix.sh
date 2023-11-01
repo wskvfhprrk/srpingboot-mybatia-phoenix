@@ -2,7 +2,6 @@
 #备份文件路径：
 back_path=/root/back
 base_path=/opt/soft
-jdk_path=$base_path
 
 
 echo =========== 停止hadoop============================
@@ -14,7 +13,6 @@ ssh root@hd38 "mkdir -p  $base_path/"
 ssh root@hd39 "rm -rf $base_path/"
 ssh root@hd39 "mkdir -p  $base_path/"
 # 继续执行其他命令
-echo "hd38，hd39文件夹已清空，继续执行其他操作..."
 echo 进入备份文件目录
 echo =========== 拷贝环境变量文件,把文件拷到/etc/profile.d/目录下===========
 rm -rf /etc/profile.d/my_dev.sh
