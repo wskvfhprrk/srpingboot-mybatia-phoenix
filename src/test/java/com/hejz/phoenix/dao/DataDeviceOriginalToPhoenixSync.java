@@ -46,7 +46,7 @@ public class DataDeviceOriginalToPhoenixSync {
                     }
 
                     upsertStmt.setDate(3, new java.sql.Date(create_time.getTime()));
-                    upsertStmt.setLong(4, Long.valueOf(map.get("content").toString()));
+                    upsertStmt.setString(4, map.get("content").toString());
                     upsertStmt.executeUpdate();
                 }
                 phoenixConnection.commit();
