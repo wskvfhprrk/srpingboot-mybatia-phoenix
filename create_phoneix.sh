@@ -101,10 +101,10 @@ mv $base_path/phoenix-hbase-2.4.0-5.1.3-bin/ $base_path/phoenix
 cp $base_path/phoenix/phoenix-server-hbase-2.4.0.jar $base_path/hbase/lib/
 echo =========== 分发文件============================
 ./xsync.sh /etc/profile.d/my_dev.sh
-./xsync.sh $base_path/jdk1.8.0_381/
-./xsync.sh $base_path/hadoop-3.1.3/
-./xsync.sh $base_path/zk/
-./xsync.sh $base_path/hbase/
+./xsync.sh $base_path/jdk1.8.0_381
+./xsync.sh $base_path/hadoop-3.1.3
+./xsync.sh $base_path/zk
+./xsync.sh $base_path/hbase
 echo =========== 修改zk下的myid============================
 ssh root@hd38 "sed -i 's/1/2/g' $base_path/zk/zkData/myid"
 ssh root@hd39 "sed -i 's/1/3/g' $base_path/zk/zkData/myid"
