@@ -9,8 +9,6 @@ for server in "${servers[@]}"
 do
     echo "服务器hostname：$server"
 done
-
-
 echo =========== 停止hadoop============================
 /root/stop.sh
 
@@ -34,14 +32,6 @@ for server in "${servers[@]}"
 do
     echo "$server soft文件夹新建"
     ssh root@$server "mkdir -p  $base_path/"
-done
-echo =========== 删除tmp临时文件==================================
-for server in "${servers[@]}"
-do
-    echo "$server 删除tmp临时文件"
-    ssh root@$server "mkdir -p /root/back/"
-    ssh root@$server "cp -rf /tmp/ /root/back/tmpback/"
-    ssh root@$server "rm -rf /tmp/*"
 done
 echo =========== jdk安装新的jkd==================================
 cp -r jdk1.8.0_381/ $base_path/
@@ -147,6 +137,14 @@ if [ "$input" = "y" ]; then
         ssh root@$server "echo $i > /opt/zk/zkData/myid"
     done
     eval "$format_command"
+    #echo =========== 备份tmp临时文件==================================
+    for server in "${servers[@]}"
+    do
+        echo "$server 备份tmp临时文件"
+        ssh root@$server "mkdir -p /root/back/"
+        ssh root@$server "rm -rf /root/back/tmpback/"
+        ssh root@$server "cp -rf /tmp/ /root/back/tmpback/"
+    done
 else
     echo "执行重装"
     for server in "${servers[@]}"
