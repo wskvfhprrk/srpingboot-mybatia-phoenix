@@ -39,6 +39,8 @@ echo =========== 删除tmp临时文件==================================
 for server in "${servers[@]}"
 do
     echo "$server 删除tmp临时文件"
+    ssh root@$server "mkdir -p /root/back/"
+    ssh root@$server "cp -rf /tmp/ /root/back/tmpback/"
     ssh root@$server "rm -rf /tmp/*"
 done
 echo =========== jdk安装新的jkd==================================
@@ -146,9 +148,13 @@ if [ "$input" = "y" ]; then
     done
     eval "$format_command"
 else
-    echo "取消执行"
-    rm -rf /tmp/*
-    cp -r /tmpback/* /tmp/
+    echo "执行重装"
+    for server in "${servers[@]}"
+    do
+        echo "$server 恢复临时文件tmp"
+        ssh root@$server "rm -rf /tmp/*"
+        ssh root@$server "cp -r /root/back/tmpback/* /tmp/"
+    done
 fi
 echo =========== 启动hadoop============================
 $base_path/hdp.sh start
