@@ -2,41 +2,45 @@
 #备份文件路径：
 back_path=/root/back
 base_path=/opt/soft
+#服务器hostname
+servers=("hd37" "hd38" "hd39")
+for server in "${servers[@]}"
+
+do
+    echo "服务器hostname：$server"
+done
 
 
 echo =========== 停止hadoop============================
 /root/stop.sh
 
-echo =========== 删除hd38,hd39 soft文件夹重新建===========
-ssh root@hd38 "rm -rf $base_path/"
-ssh root@hd38 "mkdir -p  $base_path/"
-ssh root@hd39 "rm -rf $base_path/"
-ssh root@hd39 "mkdir -p  $base_path/"
-# 继续执行其他命令
-echo 进入备份文件目录
-echo =========== 拷贝环境变量文件,把文件拷到/etc/profile.d/目录下===========
-rm -rf /etc/profile.d/my_dev.sh
-cp -r $back_path/path/* /etc/profile.d/
-echo =========== 删除所有环境变量 ===========
-rpm -qa | grep java
-rpm -qa | grep hadoop
-rpm -qa | grep hbase
-rpm -qa | grep zookeeper
-ssh root@hd38 "rpm -qa | grep java"
-ssh root@hd38 "rpm -qa | grep hadoop"
-ssh root@hd38 "rpm -qa | grep hbase"
-ssh root@hd38 "rpm -qa | grep zookeeper"
-ssh root@hd39 "rpm -qa | grep java"
-ssh root@hd39 "rpm -qa | grep hadoop"
-ssh root@hd39 "rpm -qa | grep hbase"
-ssh root@hd39 "rpm -qa | grep zookeeper"
-echo =========== 删除soft文件夹重新建==================================
-rm -rf $base_path/
-mkdir -p  $base_path/
-echo =========== 删除临时文件==================================
-rm -rf /tmp/*
-ssh root@hd38 "rm -rf /tmp/*"
-ssh root@hd39 "rm -rf /tmp/*"
+echo =========== 删除hd38,hd39 soft文件夹===========
+for server in "${servers[@]}"
+do
+    echo "删除：$server 的soft文件"
+    ssh root@$server "rm -rf $base_path/"
+done
+#echo =========== 拷贝环境变量文件,把文件拷到/etc/proserver.d/目录下===========
+#rm -rf /etc/proserver.d/my_dev.sh
+#cp -r $back_path/path/* /etc/proserver.d/
+#echo =========== 删除所有环境变量 ===========
+#for server in "${servers[@]}"
+#do
+#    echo "$server 的环境变量"
+#    ssh root@$server "rpm -qa | grep java"
+#done
+echo =========== soft文件夹新建==================================
+for server in "${servers[@]}"
+do
+    echo "$server soft文件夹新建"
+    ssh root@$server "mkdir -p  $base_path/"
+done
+echo =========== 删除tmp临时文件==================================
+for server in "${servers[@]}"
+do
+    echo "$server 删除tmp临时文件"
+    ssh root@$server "rm -rf /tmp/*"
+done
 echo =========== jdk安装新的jkd==================================
 cp -r jdk1.8.0_381/ $base_path/
 echo =========== hadoop安装新的hadoop============================
@@ -81,8 +85,6 @@ cp -rf $back_path/hadoop/sbin/stop-yarn.sh $base_path/hadoop-3.1.3/sbin/
 
 echo =========== zk配置============================
 cp $back_path/zk/conf/zoo.cfg $base_path/zk/conf/
-mkdir -p $base_path/zk/zkData
-cp -r $back_path/zk/zkData/myid $base_path/zk/zkData/
 echo =========== 脚本文件复制soft============================
 cp  -rf $back_path/soft/* $base_path/
 echo =========== hbase配置============================
@@ -104,34 +106,49 @@ tar -xzf phoenix-hbase-2.4.0-5.1.3-bin.tar.gz -C $base_path/
 mv $base_path/phoenix-hbase-2.4.0-5.1.3-bin/ $base_path/phoenix
 cp $base_path/phoenix/phoenix-server-hbase-2.4.0.jar $base_path/hbase/lib/
 echo =========== 分发文件============================
-./xsync.sh /etc/profile.d/my_dev.sh
+#./xsync.sh /etc/proserver.d/my_dev.sh
 ./xsync.sh $base_path/jdk1.8.0_381
 ./xsync.sh $base_path/hadoop-3.1.3
 ./xsync.sh $base_path/zk
 ./xsync.sh $base_path/hbase
-echo =========== 修改zk下的myid============================
-ssh root@hd38 "sed -i 's/1/2/g' $base_path/zk/zkData/myid"
-ssh root@hd39 "sed -i 's/1/3/g' $base_path/zk/zkData/myid"
 echo =========== 刷新运行环境变量========================================
-source /etc/profile
-ssh root@hd38 "source /etc/profile"
-ssh root@hd39 "source /etc/profile"
+for server in "${servers[@]}"
+do
+    echo "$server 刷新运行环境变量"
+    i=$((i + 1))
+    ssh root@$server "source /etc/profile"
+done
 echo =========== 格式化hdfs============================
 format_command=$"$base_path/hadoop-3.1.3/bin/hdfs namenode -format"
 echo "是否执行格式化hdfs程序？如果执行，所有数据将删除 (y/n)"
 read input
 if [ "$input" = "y" ]; then
     # 在这里写下面的程序
-    echo "执行格式化hdfs程序………………………………………………"
-    rm -rf /opt/hadoop
-    ssh root@hd38 "rm -rf /opt/hadoop"
-    ssh root@hd39 "rm -rf /opt/hadoop"
-    rm -rf /opt/hbase
-    ssh root@hd38 "rm -rf /opt/hbase"
-    ssh root@hd39 "rm -rf /opt/hbase"
+    for server in "${servers[@]}"
+    do
+        echo "$server 删除hadoop"
+        ssh root@$server "rm -rf /opt/hadoop"
+    done
+    for server in "${servers[@]}"
+    do
+        echo "$server 删除hbase"
+        ssh root@$server "rm -rf /opt/hbase"
+    done
+    #修改zk下的myid
+    i=0
+    for server in "${servers[@]}"
+    do
+        echo "$server 删除zk并重置myid"
+        ssh root@$server "rm -rf  /opt/zk/"
+        ssh root@$server "mkdir -p /opt/zk/zkData/"
+        i=$((i + 1))
+        ssh root@$server "echo $i > /opt/zk/zkData/myid"
+    done
     eval "$format_command"
 else
     echo "取消执行"
+    rm -rf /tmp/*
+    cp -r /tmpback/* /tmp/
 fi
 echo =========== 启动hadoop============================
 $base_path/hdp.sh start
