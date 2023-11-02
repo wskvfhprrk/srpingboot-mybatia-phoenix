@@ -138,24 +138,15 @@ if [ $1 = 2 ]; then
         ssh root@$server "echo $i > /opt/zk/zkData/myid"
     done
     $hadoop_path/bin/hdfs namenode -format
-    #备份tmp临时文件
-    for server in "${servers[@]}"
-    do
-        echo "$server 备份tmp临时文件"
-        ssh root@$server "rm -rf $back_path/tmp_back/"
-        ssh root@$server "mkdir -p $back_path/tmp_back/"
-        ssh root@$server "cp -r /tmp/* $back_path/tmp_back/"
-    done
 elif [ $1 = 1 ]; then
     echo "执行重装,原数据将保存！"
-    for server in "${servers[@]}"
-    do
-        echo "$server 恢复临时文件tmp"
-        ssh root@$server "rm -rf /tmp/*"
-        ssh root@$server "cp -r $back_path/tmp_back/* /tmp/"
-    done
 fi
 echo =========== 启动hadoop============================
+for server in "${servers[@]}"
+    do
+        echo "$server 清空缓存文件"
+        ssh root@$server "rm -rf  /tmp/*"
+    done
 $base_path/hdp.sh start
 $zk_path.sh start
 $hbase_path/bin/start-hbase.sh
