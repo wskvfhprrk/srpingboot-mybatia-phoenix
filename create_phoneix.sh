@@ -20,7 +20,7 @@ if [ -z "$1" ]; then
 fi
 if [ $1 = 2 ]; then
   echo "装新系统，所有数据将删除！"
-elif [ $1 = 1 ]; then
+else
   echo "执行重装，原数据将保存！"
 fi
 echo =========== 停止hadoop    ========================
@@ -138,7 +138,7 @@ if [ $1 = 2 ]; then
         ssh root@$server "echo $i > /opt/zk/zkData/myid"
     done
     $hadoop_path/bin/hdfs namenode -format
-elif [ $1 = 1 ]; then
+else
     echo "执行重装,原数据将保存！"
 fi
 for server in "${servers[@]}"
