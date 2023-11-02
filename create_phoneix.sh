@@ -137,18 +137,13 @@ if [ $1 = 2 ]; then
         i=$((i + 1))
         ssh root@$server "echo $i > /opt/zk/zkData/myid"
     done
-    for server in "${servers[@]}"
-    do
-        echo "$server 清空z临时文件"
-        ssh root@$server "rm -rf /tmp/*"
-    done
     $hadoop_path/bin/hdfs namenode -format
     #备份tmp临时文件
     for server in "${servers[@]}"
     do
         echo "$server 备份tmp临时文件"
-        ssh root@$server "mkdir -p $back_path/"
         ssh root@$server "rm -rf $back_path/tmp_back/"
+        ssh root@$server "mkdir -p $back_path/tmp_back/"
         ssh root@$server "cp -r /tmp/* $back_path/tmp_back/"
     done
 elif [ $1 = 1 ]; then
