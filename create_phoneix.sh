@@ -1,32 +1,44 @@
 #!/bin/bash
+#此脚本运行前提时必须实现免密登陆和服务器间数据传送,使用的是root用户
 #备份文件路径：
 back_path=/root/back
 base_path=/opt/soft
+#jdk安装路径
+jdk_path=$base_path/jdk1.8.0_381
+#hadoop路径
+hadoop_path=$base_path/hadoop-3.1.3
+#hbase安装路径
+hbase_path=$base_path/hbase
+#zookeeper安装路径
+zk_path=$base_path/zk
 #服务器hostname
 servers=("hd37" "hd38" "hd39")
-for server in "${servers[@]}"
-
-do
-    echo "服务器hostname：$server"
-done
+# 检查第一个参数是否存在
+if [ -z "$1" ]; then
+    echo "缺少参数，退出程序。"
+    exit 1
+fi
+if [ $1 = 2 ]; then
+  echo "装新系统，所有数据将删除！"
+elif [ $1 = 1 ]; then
+  echo "执行重装，原数据将保存！"
+fi
 echo =========== 停止hadoop============================
 /root/stop.sh
-
 echo =========== 删除hd38,hd39 soft文件夹===========
 for server in "${servers[@]}"
 do
-    echo "删除：$server 的soft文件"
+    echo "$server 删除soft文件夹"
     ssh root@$server "rm -rf $base_path/"
 done
-#echo =========== 拷贝环境变量文件,把文件拷到/etc/proserver.d/目录下===========
-#rm -rf /etc/proserver.d/my_dev.sh
-#cp -r $back_path/path/* /etc/proserver.d/
-#echo =========== 删除所有环境变量 ===========
-#for server in "${servers[@]}"
-#do
-#    echo "$server 的环境变量"
-#    ssh root@$server "rpm -qa | grep java"
-#done
+echo =========== 拷贝环境变量文件,把文件拷到/etc/profile.d/目录下===========
+for server in "${servers[@]}"
+do
+    ssh root@$server "rpm -qa | grep java"
+    echo "$server 的环境变量"
+    scp -r $back_path/path/my_dev.sh root@$server:/etc/profile.d/
+    ssh root@$server "source /etc/profile"
+done
 echo =========== soft文件夹新建==================================
 for server in "${servers[@]}"
 do
@@ -42,80 +54,69 @@ tar -xzf hbase-2.4.17-bin.tar.gz -C $base_path/
 echo =========== zk安装新的zk============================
 tar -xzf apache-zookeeper-3.8.3-bin.tar.gz -C $base_path/
 echo =========== 改名称============================
-mv $base_path/apache-zookeeper-3.8.3-bin $base_path/zk
-mv $base_path/hbase-2.4.17 $base_path/hbase
+mv $base_path/apache-zookeeper-3.8.3-bin $zk_path
+mv $hbase_path-2.4.17 $hbase_path
 echo =========== hadoop配置============================
-rm -rf $base_path/hadoop-3.1.3/etc/hadoop/core-site.xml
-cp -rf $back_path/hadoop/etc/hadoop/core-site.xml $base_path/hadoop-3.1.3/etc/hadoop/
+rm -rf $hadoop_path/etc/hadoop/core-site.xml
+cp -rf $back_path/hadoop/etc/hadoop/core-site.xml $hadoop_path/etc/hadoop/
 
-rm -rf $base_path/hadoop-3.1.3/etc/hadoop/hdfs-site.xml
-cp -rf $back_path/hadoop/etc/hadoop/hdfs-site.xml $base_path/hadoop-3.1.3/etc/hadoop/
+rm -rf $hadoop_path/etc/hadoop/hdfs-site.xml
+cp -rf $back_path/hadoop/etc/hadoop/hdfs-site.xml $hadoop_path/etc/hadoop/
 
-rm -rf $base_path/hadoop-3.1.3/etc/hadoop/mapred-site.xml
-cp -rf $back_path/hadoop/etc/hadoop/mapred-site.xml $base_path/hadoop-3.1.3/etc/hadoop/
+rm -rf $hadoop_path/etc/hadoop/mapred-site.xml
+cp -rf $back_path/hadoop/etc/hadoop/mapred-site.xml $hadoop_path/etc/hadoop/
 
-rm -rf $base_path/hadoop-3.1.3/etc/hadoop/yarn-site.xml
-cp -rf $back_path/hadoop/etc/hadoop/yarn-site.xml $base_path/hadoop-3.1.3/etc/hadoop/
+rm -rf $hadoop_path/etc/hadoop/yarn-site.xml
+cp -rf $back_path/hadoop/etc/hadoop/yarn-site.xml $hadoop_path/etc/hadoop/
 
-rm -rf $base_path/hadoop-3.1.3/etc/hadoop/workers
-cp -rf $back_path/hadoop/etc/hadoop/workers $base_path/hadoop-3.1.3/etc/hadoop/
+rm -rf $hadoop_path/etc/hadoop/workers
+cp -rf $back_path/hadoop/etc/hadoop/workers $hadoop_path/etc/hadoop/
 
-rm -rf $base_path/hadoop-3.1.3/etc/hadoop/hadoop-env.sh
-cp -rf $back_path/hadoop/etc/hadoop/hadoop-env.sh $base_path/hadoop-3.1.3/etc/hadoop/
+rm -rf $hadoop_path/etc/hadoop/hadoop-env.sh
+cp -rf $back_path/hadoop/etc/hadoop/hadoop-env.sh $hadoop_path/etc/hadoop/
 
-rm -rf $base_path/hadoop-3.1.3/sbin/start-dfs.sh
-cp -rf $back_path/hadoop/sbin/start-dfs.sh $base_path/hadoop-3.1.3/sbin/
+rm -rf $hadoop_path/sbin/start-dfs.sh
+cp -rf $back_path/hadoop/sbin/start-dfs.sh $hadoop_path/sbin/
 
-rm -rf $base_path/hadoop-3.1.3/sbin/stop-dfs.sh
-cp -rf $back_path/hadoop/sbin/stop-dfs.sh $base_path/hadoop-3.1.3/sbin/
+rm -rf $hadoop_path/sbin/stop-dfs.sh
+cp -rf $back_path/hadoop/sbin/stop-dfs.sh $hadoop_path/sbin/
 
-rm -rf $base_path/hadoop-3.1.3/sbin/start-yarn.sh
-cp -rf $back_path/hadoop/sbin/start-yarn.sh $base_path/hadoop-3.1.3/sbin/
+rm -rf $hadoop_path/sbin/start-yarn.sh
+cp -rf $back_path/hadoop/sbin/start-yarn.sh $hadoop_path/sbin/
 
-rm -rf $base_path/hadoop-3.1.3/sbin/stop-yarn.sh
-cp -rf $back_path/hadoop/sbin/stop-yarn.sh $base_path/hadoop-3.1.3/sbin/
+rm -rf $hadoop_path/sbin/stop-yarn.sh
+cp -rf $back_path/hadoop/sbin/stop-yarn.sh $hadoop_path/sbin/
 
 echo =========== zk配置============================
-cp $back_path/zk/conf/zoo.cfg $base_path/zk/conf/
+cp $back_path/zk/conf/zoo.cfg $zk_path/conf/
 echo =========== 脚本文件复制soft============================
 cp  -rf $back_path/soft/* $base_path/
 echo =========== hbase配置============================
 
-rm -rf $base_path/hbase/conf/hbase-env.sh
-cp -rf $back_path/hbase/conf/hbase-env.sh $base_path/hbase/conf/
+rm -rf $hbase_path/conf/hbase-env.sh
+cp -rf $back_path/hbase/conf/hbase-env.sh $hbase_path/conf/
 
-rm -rf $base_path/hbase/conf/hbase-site.xml
-cp -rf $back_path/hbase/conf/hbase-site.xml $base_path/hbase/conf/
+rm -rf $hbase_path/conf/hbase-site.xml
+cp -rf $back_path/hbase/conf/hbase-site.xml $hbase_path/conf/
 
-rm -rf $base_path/hbase/conf/regionservers
-cp -rf $back_path/hbase/conf/regionservers $base_path/hbase/conf/
+rm -rf $hbase_path/conf/regionservers
+cp -rf $back_path/hbase/conf/regionservers $hbase_path/conf/
 echo =========== 解决hbase与hadoop日志冲突============================
-mv $base_path/hbase/lib/client-facing-thirdparty/slf4j-reload4j-1.7.33.jar $base_path/hbase/lib/client-facing-thirdparty/slf4j-reload4j-1.7.33.jar.bak
+mv $hbase_path/lib/client-facing-thirdparty/slf4j-reload4j-1.7.33.jar $hbase_path/lib/client-facing-thirdparty/slf4j-reload4j-1.7.33.jar.bak
 echo =========== HMaster高可用============================
-echo "hd38" > $base_path/hbase/conf/backup-masters
+echo "hd38" > $hbase_path/conf/backup-masters
 echo =========== phoniex============================
 tar -xzf phoenix-hbase-2.4.0-5.1.3-bin.tar.gz -C $base_path/
 mv $base_path/phoenix-hbase-2.4.0-5.1.3-bin/ $base_path/phoenix
-cp $base_path/phoenix/phoenix-server-hbase-2.4.0.jar $base_path/hbase/lib/
+cp $base_path/phoenix/phoenix-server-hbase-2.4.0.jar $hbase_path/lib/
 echo =========== 分发文件============================
-#./xsync.sh /etc/proserver.d/my_dev.sh
-./xsync.sh $base_path/jdk1.8.0_381
-./xsync.sh $base_path/hadoop-3.1.3
-./xsync.sh $base_path/zk
-./xsync.sh $base_path/hbase
-echo =========== 刷新运行环境变量========================================
-for server in "${servers[@]}"
-do
-    echo "$server 刷新运行环境变量"
-    i=$((i + 1))
-    ssh root@$server "source /etc/profile"
-done
-echo =========== 格式化hdfs============================
-format_command=$"$base_path/hadoop-3.1.3/bin/hdfs namenode -format"
-echo "是否执行格式化hdfs程序？如果执行，所有数据将删除 (y/n)"
-read input
-if [ "$input" = "y" ]; then
+./xsync.sh $jdk_path
+./xsync.sh $hadoop_path
+./xsync.sh $zk_path
+./xsync.sh $hbase_path
+if [ $1 = 2 ]; then
     # 在这里写下面的程序
+
     for server in "${servers[@]}"
     do
         echo "$server 删除hadoop"
@@ -136,28 +137,33 @@ if [ "$input" = "y" ]; then
         i=$((i + 1))
         ssh root@$server "echo $i > /opt/zk/zkData/myid"
     done
-    eval "$format_command"
-    #echo =========== 备份tmp临时文件==================================
+    for server in "${servers[@]}"
+    do
+        echo "$server 清空z临时文件"
+        ssh root@$server "rm -rf /tmp/*"
+    done
+    $hadoop_path/bin/hdfs namenode -format
+    #备份tmp临时文件
     for server in "${servers[@]}"
     do
         echo "$server 备份tmp临时文件"
-        ssh root@$server "mkdir -p /root/back/"
-        ssh root@$server "rm -rf /root/back/tmpback/"
-        ssh root@$server "cp -rf /tmp/ /root/back/tmpback/"
+        ssh root@$server "mkdir -p $back_path/"
+        ssh root@$server "rm -rf $back_path/tmp_back/"
+        ssh root@$server "cp -r /tmp/* $back_path/tmp_back/"
     done
-else
-    echo "执行重装"
+elif [ $1 = 1 ]; then
+    echo "执行重装,原数据将保存！"
     for server in "${servers[@]}"
     do
         echo "$server 恢复临时文件tmp"
         ssh root@$server "rm -rf /tmp/*"
-        ssh root@$server "cp -r /root/back/tmpback/* /tmp/"
+        ssh root@$server "cp -r $back_path/tmp_back/* /tmp/"
     done
 fi
 echo =========== 启动hadoop============================
 $base_path/hdp.sh start
-$base_path/zk.sh start
-$base_path/hbase/bin/start-hbase.sh
+$zk_path.sh start
+$hbase_path/bin/start-hbase.sh
 ./jpsall
 rm -rf .sqlline
 $base_path/phoenix/bin/sqlline.py hd37,hd38,hd39:2181
