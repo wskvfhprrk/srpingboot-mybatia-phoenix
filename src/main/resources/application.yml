@@ -1,3 +1,7 @@
+server:
+  jetty:
+    accesslog:
+      enabled: true
 spring:
   datasource:
     driver-class-name: org.apache.phoenix.jdbc.PhoenixDriver

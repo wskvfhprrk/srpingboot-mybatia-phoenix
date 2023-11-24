@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,26 +33,26 @@ class UserDaoTest {
     }
 
     @Test
-    void page(){
+    void page() {
         PageHelper.startPage(1, 10);
         List<User> users = userDao.listAll();
-        PageInfo<User> pageInfo=new PageInfo<>(users);
-        log.info("getSize：{}条数据",pageInfo.getSize());
-        log.info("getTotal：{}条数据",pageInfo.getTotal());
+        PageInfo<User> pageInfo = new PageInfo<>(users);
+        log.info("getSize：{}条数据", pageInfo.getSize());
+        log.info("getTotal：{}条数据", pageInfo.getTotal());
         for (User user : users) {
             System.out.println(user);
         }
     }
 
-    @Test
-    void upsert(){
-        LocalDateTime begin=LocalDateTime.now();
-        for (int i = 0; i < 100000; i++) {
-            User user=new User(i,"张三"+i,i,"男", new Date(System.currentTimeMillis()));
-            userDao.upstert(user);
-        }
-        LocalDateTime end=LocalDateTime.now();
-        Duration between = Duration.between(begin, end);
-        System.out.println(between.getSeconds());
-    }
+//    @Test
+//    void upsert() {
+//        LocalDateTime begin = LocalDateTime.now();
+//        for (int i = 0; i < 10000; i++) {
+//            User user = new User(i, "张三" + i, i, "男", new Date(System.currentTimeMillis()));
+//            userDao.upsert(user);
+//        }
+//        LocalDateTime end = LocalDateTime.now();
+//        Duration between = Duration.between(begin, end);
+//        System.out.println(between.getSeconds());
+//    }
 }

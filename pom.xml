@@ -31,6 +31,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -38,11 +42,19 @@
             <groupId>org.apache.phoenix</groupId>
             <artifactId>phoenix-core</artifactId>
             <version>5.1.3</version>
+            <exclusions>
+                <!--不使用phoniex的javax.servlet.jsp容器，不然的话springbootweb无法启动-->
+                <exclusion>
+                    <artifactId>javax.servlet.jsp</artifactId>
+                    <groupId>org.glassfish.web</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <!--Apache Phoenix是HBase上的SQL皮肤，作为客户端嵌入式JDBC驱动程序交付，目标是对HBase数据进行低延迟查询 -->
         <dependency>
             <groupId>org.apache.phoenix</groupId>
-            <artifactId>phoenix-hbase-compat-2.5.0</artifactId>
+            <artifactId>phoenix-hbase-compat-2.4.0</artifactId>
             <version>5.1.3</version>
             <scope>runtime</scope>
         </dependency>

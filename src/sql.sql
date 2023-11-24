@@ -52,6 +52,22 @@ select *
 from "air"."data_power";
 select count(*)
 from "air"."data_power";
+SELECT
+    TO_CHAR(MIN("create_time"), 'YYYY-MM') as month,
+  MAX("power") - MIN("power") as daily_power_usage
+FROM
+    "air"."data_power"
+GROUP BY
+    TO_CHAR("create_time", 'YYYY-MM');
+SELECT
+    TO_CHAR(MIN("create_time"), 'yyyy-MM-dd') as day,
+  MAX("power") - MIN("power") as daily_power_usage
+FROM
+    "air"."data_power"
+GROUP BY
+    TO_CHAR("create_time", 'yyyy-MM-dd');
+
+
 select * from "air"."data_power" where "id"=(select MAX ("id") from "air"."data_power");
 SELECT
     TO_CHAR("create_time", 'YYYY-MM') AS "month",

@@ -1,6 +1,5 @@
 package com.hejz.phoenix.dao;
 
-import org.apache.phoenix.jdbc.PhoenixDriver;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
